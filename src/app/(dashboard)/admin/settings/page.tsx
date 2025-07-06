@@ -95,7 +95,7 @@ const Page = () => {
                 Manage The categories available for Tasks
               </p>
             </div>
-            <div className="rounded-xl border-2 border-t-4 border-[#7CBAFD] px-3 py-2 font-[400] text-[#3B82F6]">
+            <div className="cursor-pointer rounded-xl border-2 border-t-4 border-[#7CBAFD] px-3 py-2 font-[400] text-[#3B82F6]">
               {/* <Image/> */}
               <h2>+ Add Category</h2>
             </div>
@@ -283,7 +283,7 @@ const Page = () => {
               <span>Require Email Verification</span>
             </div>
           </div>
-          <button className="mt-6 w-[147px] self-end rounded-xl border-2 border-[#7CBAFD] px-3 py-2 font-[400] text-[#3B82F6]">
+          <button className="mt-4 w-[147px] self-end rounded-xl border-2 border-[#7CBAFD] px-3 py-2 font-[400] text-[#3B82F6]">
             Save Changes
           </button>
         </div>
