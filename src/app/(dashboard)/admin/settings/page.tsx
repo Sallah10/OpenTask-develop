@@ -1,16 +1,29 @@
 'use client';
 import React, { useState } from 'react';
+import * as RadixSwitch from '@radix-ui/react-switch';
+import Image from 'next/image';
+import editIcon from '../../../../../public/icons/edit.png';
+import deleteIcon from '../../../../../public/icons/material-symbols_delete-outline.png';
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const [rowStatus, setRowStatus] = useState<boolean[]>(Array(6).fill(true));
+
+  // Manually define your rows
+  const [rows, setRows] = useState([
+    { name: 'Content', description: 'Content creation and writing tasks', status: true },
+    { name: 'Testing', description: 'software and website testing tasks', status: true },
+    { name: 'research', description: 'Market and user research tasks', status: true },
+    { name: 'Design', description: 'UI/UX and graphic design tasks', status: true },
+    { name: 'Survey', description: 'A short survey about Defi', status: false },
+    { name: 'Support', description: 'Customer Support', status: true },
+  ]);
 
   const handleToggle = (idx: number) => {
-    setRowStatus((prev) => {
-      const updated = [...prev];
-      updated[idx] = !updated[idx];
-      return updated;
-    });
+    setRows((prev) =>
+      prev.map((row, i) =>
+        i === idx ? { ...row, status: !row.status } : row
+      )
+    );
   };
 
   const tabs = [
@@ -49,100 +62,83 @@ const Page = () => {
                     borderBottom: '2px solid #ABB9C9',
                   }}
                 >
-                  <th
-                    style={{
-                      padding: '20px',
-                      border: 'none',
-                      textAlign: 'left',
-                    }}
-                  >
-                    Column 1
+                  <th style={{ padding: '20px', border: 'none', textAlign: 'left' }}>
+                    Name
                   </th>
-                  <th
-                    style={{
-                      padding: '20px',
-                      border: 'none',
-                      textAlign: 'left',
-                    }}
-                  >
-                    Column 2
+                  <th style={{ padding: '20px', border: 'none', textAlign: 'left' }}>
+                    Description
                   </th>
-                  <th
-                    style={{
-                      padding: '20px',
-                      border: 'none',
-                      textAlign: 'left',
-                    }}
-                  >
+                  <th style={{ padding: '20px', border: 'none', textAlign: 'left' }}>
                     Status
                   </th>
-                  <th
-                    style={{
-                      padding: '20px',
-                      border: 'none',
-                      textAlign: 'left',
-                    }}
-                  >
-                    Column 4
+                  <th style={{ padding: '20px', border: 'none', textAlign: 'left' }}>
+                    Action
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <tr key={i}>
+                {rows.map((row, i) => (
+                  <tr key={i} className='text-[#202020]'>
                     <td
                       style={{
                         padding: '20px',
                         border: 'none',
-                        borderBottom: i !== 5 ? '2px solid #ABB9C9' : 'none',
+                        borderBottom: i !== rows.length - 1 ? '2px solid #ABB9C9' : 'none',
                       }}
                     >
-                      Row {i + 1} - 1
+                      {row.name}
                     </td>
                     <td
                       style={{
                         padding: '20px',
                         border: 'none',
-                        borderBottom: i !== 5 ? '2px solid #ABB9C9' : 'none',
+                        borderBottom: i !== rows.length - 1 ? '2px solid #ABB9C9' : 'none',
                       }}
                     >
-                      Row {i + 1} - 2
+                      {row.description}
                     </td>
                     <td
                       style={{
                         padding: '20px',
                         border: 'none',
-                        borderBottom: i !== 5 ? '2px solid #ABB9C9' : 'none',
+                        borderBottom: i !== rows.length - 1 ? '2px solid #ABB9C9' : 'none',
                       }}
                     >
-                      {/* Switch */}
-                      <label className="inline-flex cursor-pointer items-center">
-                        <input
-                          type="checkbox"
-                          checked={rowStatus[i]}
-                          onChange={() => handleToggle(i)}
-                          className="peer sr-only"
+                      <RadixSwitch.Root
+                        checked={row.status}
+                        onCheckedChange={() => handleToggle(i)}
+                        className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors data-[state=checked]:bg-blue-600"
+                        id={`switch-${i}`}
+                      >
+                        <RadixSwitch.Thumb
+                          className="block h-5 w-5 rounded-full bg-white shadow-lg transition-transform data-[state=checked]:translate-x-5"
                         />
-                        <div className="peer h-6 w-11 rounded-full bg-gray-200 transition-all peer-checked:bg-blue-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500"></div>
-                        <div
-                          className={`absolute ml-1 mt-1 h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                            rowStatus[i] ? 'translate-x-5' : ''
-                          }`}
-                          style={{ pointerEvents: 'none' }}
-                        ></div>
-                        <span className="ml-3 text-sm font-medium">
-                          {rowStatus[i] ? 'Active' : 'Inactive'}
-                        </span>
-                      </label>
+                      </RadixSwitch.Root>
+                      <span className="ml-3 text-sm font-medium">
+                        {row.status ? 'Active' : 'Inactive'}
+                      </span>
                     </td>
                     <td
                       style={{
                         padding: '20px',
                         border: 'none',
-                        borderBottom: i !== 5 ? '2px solid #ABB9C9' : 'none',
+                        borderBottom: i !== rows.length - 1 ? '2px solid #ABB9C9' : 'none',
                       }}
                     >
-                      Row {i + 1} - 4
+                      <Image
+                        src={editIcon}
+                        width={20}
+                        height={20}
+                        alt="Edit"
+                        className="inline-block h-5 w-5 cursor-pointer mr-6"
+                      />
+                      <Image
+                        src={deleteIcon}
+                        width={20}
+                        height={20}
+                        alt="Delete"
+                        className="inline-block h-5 w-5 cursor-pointer"
+                      />
                     </td>
                   </tr>
                 ))}
@@ -152,25 +148,116 @@ const Page = () => {
         </div>
       ),
     },
-    { label: 'Platform', content: <div>Platform content goes here.</div> },
-    { label: 'Payments', content: <div>Payments content goes here.</div> },
+    {
+      label: 'Platform', content: (
+        <div className='flex flex-col gap-6'>
+          <div>
+            <h1 className="text-2xl font-bold">Platform Settings</h1>
+            <p className='font-semibold text-[#7E7E7E]'>Configure General Platform Settings</p>
+          </div>
+          <h2 className="text-xl font-bold">Task Settings</h2>
+          <div className='flex gap-10 font-bold text-[#161616]'>
+            <div>
+              <h2>Uto-Close Tasks After (Days)</h2>
+              {/* counter */}
+            </div>
+            <div>
+              <h2>Allow Disputes Within(days)</h2>
+              {/* counter */}
+            </div>
+          </div>
+          <div className='flex gap-6 pb-6 border-b-2 border-[#C0C0C0] font-bold max-w-[734px] mt-6'>
+            <RadixSwitch.Root
+              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors data-[state=checked]:bg-blue-600"
+            >
+              <RadixSwitch.Thumb
+                className="block h-5 w-5 rounded-full bg-white shadow-lg transition-transform data-[state=checked]:translate-x-5"
+              />
+            </RadixSwitch.Root>
+            <span>Require Admin Approval For New Tasks</span>
+          </div>
+          <h2 className="text-xl font-bold mt-2">Task Settings</h2>
+          <div className='flex flex-col gap-6 font-bold'>
+            <div className='flex gap-6 items-center'>
+              <RadixSwitch.Root
+                className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors data-[state=checked]:bg-blue-600"
+              >
+                <RadixSwitch.Thumb
+                  className="block h-5 w-5 rounded-full bg-white shadow-lg transition-transform data-[state=checked]:translate-x-5"
+                />
+              </RadixSwitch.Root>
+              <span>Enable User Ratings</span>
+            </div>
+            <div className='flex gap-6'>
+              <RadixSwitch.Root
+                className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors data-[state=checked]:bg-blue-600"
+              >
+                <RadixSwitch.Thumb
+                  className="block h-5 w-5 rounded-full bg-white shadow-lg transition-transform data-[state=checked]:translate-x-5"
+                />
+              </RadixSwitch.Root><span>Require Email Verification</span>
+            </div>
+          </div>
+          <button className="rounded-xl border-2 w-[147px] mt-6 self-end border-[#7CBAFD] px-3 py-2 font-[400] text-[#3B82F6]">
+            Save Changes
+          </button>
+        </div>)
+    },
+    {
+      label: 'Payments', content: (
+        <div className='flex flex-col gap-6'>
+          <div>
+            <h1 className="text-2xl font-bold">Platform Settings</h1>
+            <p className='font-semibold text-[#7E7E7E]'>Configure General Platform Settings</p>
+          </div>
+          <h2 className="text-xl font-bold">Task Rewards Limits</h2>
+          <div className='flex gap-10 font-bold text-[#161616]'>
+            <div>
+              <h2>Require Email Verification</h2>
+              {/* counter */}
+            </div>
+            <div>
+              <h2>Maximum task Reward ($)</h2>
+              {/* counter */}
+            </div>
+          </div>
+          <div className='flex gap-6 pb-6 border-b-2 border-[#C0C0C0] font-bold max-w-[734px] mt-6' />
+          <h2 className="text-xl font-bold mt-2">Platform Fee Percentage (%)</h2>
+          <div>
+            <h2>Platform Fee Percentage (%)</h2>
+            {/* counter */}
+          </div>
+          <button className="rounded-xl border-2 w-[147px] mt-6 self-end border-[#7CBAFD] px-3 py-2 font-[400] text-[#3B82F6]">
+            Save Changes
+          </button>
+        </div>)
+    },
     {
       label: 'Notifications',
-      content: <div>Notifications content goes here.</div>,
+      content: (
+        <div>
+          <div>
+            <h1 className="text-2xl font-bold">Notification Settings</h1>
+            <p className='font-semibold text-[#7E7E7E] mt-2'>Configure General Platform Settings</p>
+          </div>
+          <div className='rounded-md flex flex-col items-center justify-center border-2 border-[#C0C0C0] h-[100vh] mt-8'>
+            <p className='font-semibold text-[#7E7E7E]'>Notification settings Would Appear Here</p>
+          </div>
+        </div>
+      ),
     },
   ];
 
   return (
     <main>
       <h1 className="my-6 text-3xl font-bold text-black">Settings</h1>
-      <div className="flex w-[560px] gap-6 rounded-md bg-white px-4 py-6 text-black">
+      <div className="flex max-w-[560px] gap-6 rounded-md bg-white px-4 py-6 text-black">
         {tabs.map((tab, idx) => (
           <h2
             key={tab.label}
             onClick={() => setActiveTab(idx)}
-            className={`cursor-pointer rounded px-4 py-3 transition ${
-              activeTab === idx ? 'bg-blue-600 font-bold text-white' : ''
-            }`}
+            className={`cursor-pointer rounded px-4 py-3 transition ${activeTab === idx ? 'bg-blue-600 font-bold text-white' : ''
+              }`}
           >
             {tab.label}
           </h2>
